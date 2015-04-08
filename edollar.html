@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<title>eDollar</title>
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+
+</head>
+
+<body>
+
+	<!--jumbotron-->
+	<div class="jumbotron">
+		<div class="container text-center">
+			<h1>Balance: <strong id="balanceID">N/A</strong> EUSD</h1>
+			<button onclick="refreshfilter()">refresh</button>
+			<br/>
+			<div class="btn-group">
+				<button onclick="sendFun()" class="btn btn-lg btn-warning" id="sendbtn">Send</button>
+				<button onclick="receiveFun()" class="btn btn-lg btn-info" id="receivebtn">Receive</button>
+				<button onclick="privacyFun()"class="btn btn-lg btn-info" id="privacybtn">Privacy</button>
+				<button onclick="issueFun()"class="btn btn-lg btn-info" id="issuebtn">Issue</button>
+			</div>
+		</div><!--end container-->
+	</div><!--end jumbotron-->
+
+	<!--send coins-->
+	<div class="usebox" id="send">
+		<div class="well">
+			<div class="container text-center">
+				<h3>Send money</h3>
+				<form action="" class="form-inline">
+					<div class="form-group">
+						<label>Receiver address</label>
+						<input type="text" class="form-control" id="receiverID" placeholder="Enter a Bitcoin address, an Ethereum address, or an Ethereum registered name">
+						&nbsp;
+						&nbsp;
+						<label>Transaction amount</label>
+						<input type="text" class="form-control" id="amountID" placeholder="Enter the amount to send">
+						&nbsp;
+						&nbsp;
+						<button onclick="sendTX()" class="btn btn-lg btn-danger">Send Transaction</button>
+					</div>
+				</form>
+			</div><!--end container-->
+		</div><!--end well-->
+	</div><!--end usebox-->
+
+	<!--receive coins-->
+	<div class="usebox" id="receive">
+		<div class="well">
+			<div class="container text-center">
+				<h3>Receive money</h3>
+				<p>Your Ethereum address: <code id="coinbaseAddrID">N/A</code></p>
+				<p>Your Bitcoin address: <code class="bitcoinaddr">N/A</code></p>
+				<button onclick="btcGen()" class="btn btn-danger" id="btcgen">New Bitcoin address</button>
+			</div><!--end container-->
+		</div><!--end well-->
+	</div><!--end usebox-->
+	
+	<!--privacy options-->
+	<div class="usebox" id="privacy">
+		<div class="well">
+			<div class="container text-center">
+				<h3>Privacy options</h3>
+				<form action="" class="form-inline">   
+				        <div class="form-group">
+				        	<label for="shuffleedollar">Shuffle your eDollars to increase privacy</label>
+							<input type="text" class="form-control" id="shuffledollar" placeholder="amount divisible by 100">
+							<button class="btn btn-lg btn-danger">Shuffle eDollar</button>
+				        </div>
+					</form>
+			</div><!--end container-->
+		</div><!--end well-->
+	</div><!--end usebox-->
+
+	<!--issue coins-->
+	<div class="usebox" id="issue">
+		<div class="well">
+			<div class="container text-center">
+				<h3>Issue eDollar</h3>
+				<a href="http://makerdao.com/" class="btn btn-danger" id="issuewarningbtn">READ BEFORE USING</a>
+				<div class="fcollstats">
+					<h5>Free collateral: <strong id="freeCollateral">N/A</strong> ETH</h5>
+	    		</div>
+	    		<div class="depositDiv">
+			    	<form action="" class="form-inline">   
+				        <div class="form-group">
+				        	<label for="depositEther">Deposit ether to the contract as free collateral</label>
+							<input type="text" class="form-control" id="depositEther" placeholder="Input deposit amount">
+							<button onclick="depositCollateral();">deposit</button>
+				        </div>
+					</form>
+			    </div>
+			    <div class="withdrawDiv">
+			    	<form action="" class="form-inline">   
+				        <div class="form-group">
+				        	<label for="withdrawEther">Withdraw ether from free collateral to your wallet</label>
+							<input type="text" class="form-control" id="withdrawEther" placeholder="Input withdraw amount">
+							<button onclick="withdrawCollateral();">Withdraw</button>
+				        </div>
+					</form>
+			    </div>
+			    <div class="issuestats">
+			    	<h5>Debt: <strong id="debt">N/A</strong> EUSD</h5>
+			        <h5>Locked collateral: <strong id="lockedCollateral">N/A</strong> ETH</h5>
+			        <h5>Feed price: <strong id="currentFeedPrice">N/A</strong> USD per ETH</h5>
+	    		</div>
+				<div class="issueDiv">
+					<form action="" class="form-inline">
+						<div class="form-group">
+							<label for="issuecollateralamount">Issue eDollar with collateral</label>
+							<input type="text" class="form-control" id="issuecollateralamount" placeholder="Input collateral amount">
+							<button onclick="issueSomeCoins();">Issue eDollar</button>
+						</div>
+					</form>
+				</div>
+
+			    <div class="CoverDiv"> 
+			    	<form action="" class="form-inline">   
+				        <div class="form-group">
+				        	<label for="partialCoverAmount">Perform a partial or full cover</label>
+							<input type="text" class="form-control" id="partialCoverAmount" placeholder="Input partial cover amount">
+							<button onclick="partialCoverCoins();">Partial cover</button>
+							<button onclick="coverCoins();">Full cover</button>
+				        </div>
+					</form>
+			    </div>
+			</div><!--end container-->
+		</div><!--end well-->
+	</div><!--end usebox-->
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="bignumber.js"></script>
+	<script type="text/javascript" src="ethereum.js"></script>
+	<script type="text/javascript">
+
+	    var web3 = require('ethereum.js');
+	    web3.setProvider(new web3.providers.HttpProvider());
+	    var coinbaseAddr = web3.eth.coinbase;
+	    $("#coinbaseAddrID").text(coinbaseAddr);
+
+	    var eCoin = web3.eth.contract([{"constant":false,"inputs":[{"name":"targetAccount","type":"address"}],"name":"forcedCover","outputs":[],"type":"function"},{"constant":false,"inputs":[{"name":"withdrawAmountInWei","type":"uint256"}],"name":"withdrawEther","outputs":[],"type":"function"},{"constant":false,"inputs":[],"name":"checkPegStatus","outputs":[{"name":"status","type":"bool"}],"type":"function"},{"constant":false,"inputs":[{"name":"num","type":"uint256"}],"name":"lockedCollateralByIssueNum","outputs":[{"name":"lockedCollateral","type":"uint256"}],"type":"function"},{"constant":false,"inputs":[{"name":"owner","type":"address"}],"name":"issueNumByAddress","outputs":[{"name":"num","type":"uint256"}],"type":"function"},{"constant":false,"inputs":[{"name":"owner","type":"address"}],"name":"checkBalance","outputs":[{"name":"amount","type":"uint256"}],"type":"function"},{"constant":false,"inputs":[{"name":"newCollReq","type":"uint256"}],"name":"setCollReq","outputs":[],"type":"function"},{"constant":false,"inputs":[{"name":"num","type":"uint256"}],"name":"addressByIssueNum","outputs":[{"name":"account","type":"address"}],"type":"function"},{"constant":false,"inputs":[{"name":"newGuardian","type":"address"}],"name":"setGuardian","outputs":[],"type":"function"},{"constant":false,"inputs":[{"name":"owner","type":"address"}],"name":"debtByAddress","outputs":[{"name":"debt","type":"uint256"}],"type":"function"},{"constant":false,"inputs":[{"name":"receiver","type":"address"},{"name":"amount","type":"uint256"}],"name":"sendCoin","outputs":[],"type":"function"},{"constant":false,"inputs":[{"name":"owner","type":"address"}],"name":"lockedCollateralByAddress","outputs":[{"name":"lockedCollateral","type":"uint256"}],"type":"function"},{"constant":false,"inputs":[{"name":"isPegHolding","type":"bool"}],"name":"setPegStatus","outputs":[],"type":"function"},{"constant":false,"inputs":[],"name":"depositEther","outputs":[],"type":"function"},{"constant":false,"inputs":[],"name":"getNumAccounts","outputs":[{"name":"num","type":"uint256"}],"type":"function"},{"constant":false,"inputs":[{"name":"owner","type":"address"}],"name":"checkFreeCollateral","outputs":[{"name":"amount","type":"uint256"}],"type":"function"},{"constant":false,"inputs":[{"name":"coverAmount","type":"uint256"}],"name":"partialCover","outputs":[],"type":"function"},{"constant":false,"inputs":[{"name":"num","type":"uint256"}],"name":"debtByIssueNum","outputs":[{"name":"debt","type":"uint256"}],"type":"function"},{"constant":false,"inputs":[{"name":"newRate","type":"uint256"}],"name":"setSoftCallRate","outputs":[],"type":"function"},{"constant":false,"inputs":[{"name":"priceFeed","type":"uint256"}],"name":"setFeed","outputs":[],"type":"function"},{"constant":false,"inputs":[{"name":"calledAccount","type":"address"}],"name":"hardCall","outputs":[],"type":"function"},{"constant":false,"inputs":[{"name":"issueColl","type":"uint256"}],"name":"issue","outputs":[],"type":"function"},{"constant":false,"inputs":[{"name":"calledAccount","type":"address"},{"name":"penalty","type":"uint256"}],"name":"softCall","outputs":[],"type":"function"},{"constant":false,"inputs":[],"name":"cover","outputs":[],"type":"function"},{"constant":false,"inputs":[{"name":"newRate","type":"uint256"}],"name":"setHardCallRate","outputs":[],"type":"function"},{"constant":false,"inputs":[],"name":"checkPriceFeed","outputs":[{"name":"feedprice","type":"uint256"}],"type":"function"},{"constant":false,"inputs":[{"name":"receiver","type":"address"},{"name":"amount","type":"uint256"}],"name":"sendFreeCollateral","outputs":[],"type":"function"}]);
+
+	    var eCoinInstance = new eCoin("0x0d7d11825cb5fbba016f43df6312445f4d98da54")
+
+		function refreshfilter(){
+		    var dollarbal = eCoinInstance.call().checkBalance(coinbaseAddr)
+		    $("#balanceID").text(dollarbal / 1000000)
+		    var fcollbal = eCoinInstance.call().checkFreeCollateral(coinbaseAddr)
+		    $("#freeCollateral").text(fcollbal / 1000000000000000000)
+		    var debtbal = eCoinInstance.call().debtByAddress(coinbaseAddr)
+		    $("#debt").text(debtbal / 1000000)
+		    var lcollbal = eCoinInstance.call().lockedCollateralByAddress(coinbaseAddr)
+		    $("#lockedCollateral").text(lcollbal / 1000000000000000000)
+		    var feedprice = eCoinInstance.call().checkPriceFeed()
+		    $("#currentFeedPrice").text(1000000000000 / feedprice)
+		}
+
+
+	    function sendTX() {
+	    	var receiver = "0x" + $("#receiverID").val();
+	    	var amount = $("#amountID").val();
+	    	eCoinInstance.sendTransaction().sendCoin(receiver,amount);
+	    }
+
+	    function depositCollateral() {
+	    	var amount = $("#depositEther").val() * 1000000000000000000;
+	    	eCoinInstance.sendTransaction({value:amount}).depositEther()
+	    }
+
+	    function withdrawCollateral() {
+	    	var amount = $("#withdrawEther").val() * 1000000000000000000;
+	    	eCoinInstance.sendTransaction().withdrawEther(amount)
+	    }
+
+	    function issueSomeCoins() {
+	    	var amount = $("#issuecollateralamount").val() * 1000000000000000000;
+	    	eCoinInstance.sendTransaction().issue(amount)
+	    }
+
+	    function partialCoverCoins() {
+	    	var amount = $("#partialCoverAmount").val() * 1000000
+	    	eCoinInstance.sendTransaction().partialCover(amount)
+	    }
+
+	    function coverCoins() {
+	    	eCoinInstance.sendTransaction().cover()
+	    }
+
+	    $('.usebox').hide();
+		$('#sendbtn').removeClass('btn-info')
+		$('#sendbtn').addClass('btn-warning')
+		$('#send').show();
+
+		function sendFun() {
+	    	$('.usebox').hide();
+	    	$('.btn-warning').addClass('btn-info');
+	    	$('.btn-warning').removeClass('btn-warning');
+	    	$('#sendbtn').removeClass('btn-info')
+			$('#sendbtn').addClass('btn-warning')
+	    	$('#send').show();
+	  	}
+
+	  	function receiveFun() {
+	    	$('.usebox').hide();
+	    	$('.btn-warning').addClass('btn-info');
+	    	$('.btn-warning').removeClass('btn-warning');
+	    	$('#receivebtn').removeClass('btn-info')
+			$('#receivebtn').addClass('btn-warning')
+	    	$('#receive').show();
+	  	}
+
+	  	function privacyFun() {
+	    	$('.usebox').hide();
+	    	$('.btn-warning').addClass('btn-info');
+	    	$('.btn-warning').removeClass('btn-warning');
+	    	$('#prviacybtn').removeClass('btn-info')
+			$('#privacybtn').addClass('btn-warning')
+	    	$('#privacy').show();
+	  	}
+
+	  	function issueFun() {
+	    	$('.usebox').hide();
+	    	$('.btn-warning').addClass('btn-info');
+	    	$('.btn-warning').removeClass('btn-warning');
+	    	$('#issuebtn').removeClass('btn-info')
+			$('#issuebtn').addClass('btn-warning')
+	    	$('#issue').show();
+	  	}
+
+	  	function btcGen() {
+	  		var Request = new XMLHttpRequest();
+			Request.open('POST', 'https://cors.shapeshift.io/shift');
+			Request.setRequestHeader('Content-Type', 'application/json');
+			Request.onreadystatechange = function () {
+				if (this.readyState === 4) {
+					var jsonobj = JSON.parse(this.responseText);
+					$(".bitcoinaddr").text(jsonobj["deposit"]);
+				}
+			};
+			var body = {
+				'withdrawal' : 'LMDXAZAbcCgz2ebmkh3PpsGZaBckVweVuS',
+				'pair' : 'btc_ltc',
+				'returnAddress' : '1PqDMb1fSW3EVchqPtdgRRS4J5zR8guvM4',
+			}
+			Request.send(JSON.stringify(body));	
+			$(".bitcoinaddr").text("...");
+		}
+	</script>
+</body>
+</html>
