@@ -1,22 +1,22 @@
-contract DepositedCoin {
+contract DepositorCoin {
 	function sendCoin(address receiver, uint amount) {
       }
 }
 
 contract DepositableContract {
-	address depositedCoinAddr;
+	address depositorCoinAddr;
 	mapping (address => uint) balance;
-	function depositCoin(address sender, uint amount) returns(bool success) {
-		if (msg.sender == depositedCoinAddr) {
+	function contractDepositor(address sender, uint amount) returns(bool success) {
+		if (msg.sender == depositorCoinAddr) {
 			balance[sender] += amount;
 			return true;
 		}
 	}
 	function withdrawCoin(address receiver, uint amount) {
 		if (balance[msg.sender] >= amount) {
-			DepositedCoin coinInstance;
-			coinInstance = DepositedCoin(depositedCoinAddr);
-			coinInstance.sendCoin(receiver, amount);
+			DepositorCoin coinInstance;
+			coinInstance = DepositorCoin(depositorCoinAddr);
+			coinInstance.coinTransfer(receiver, amount);
 			balance[msg.sender] -= amount;
 		}
 	}
@@ -24,5 +24,3 @@ contract DepositableContract {
 		depositedCoinAddr = 0x5d7010d9955e5eeebaf4405584a86ca684c56d11;
 	}
 }
-
-3579a85e… :withdrawCoin

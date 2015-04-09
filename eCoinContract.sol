@@ -1,3 +1,7 @@
+contract DepositableContract {
+      function contractDepositor(address sender, uint amount) returns(bool success) {}
+}
+
 contract eCoin {
 
       /* using the pegged coin */
@@ -5,11 +9,25 @@ contract eCoin {
       /* this variable is the balance of the pegged coin, divided into millionths of units */
       mapping (address => uint) balance;
 
-      /* send coin balance to other users */
-      function sendCoin(address receiver, uint amount) {
+      /* send coin balance to other users or owned contracts */
+      function coinTransfer(address receiver, uint amount) {
             if (balance[msg.sender] >= amount) {
                   balance[msg.sender] -= amount;
                   balance[receiver] += amount;
+            }
+      }
+
+      /* deposit coin to contract with user balances */
+      function depositToContract (address receiver, uint amount) {
+            DepositableContract cont;
+            cont = DepositableContract(receiver);
+            if (balance[msg.sender] >= amount) {
+                  bool succ;
+                  succ = cont.contractDepositor(msg.sender,amount);
+                  if (succ) {
+                        balance[msg.sender] -= amount;
+                        balance[receiver] += amount;
+                  }
             }
       }
 
@@ -39,13 +57,13 @@ contract eCoin {
             }
       }
 
-      /* address of the guardian DAO contract */
-      address guardian;
+      /* address of the keeper DAO contract */
+      address keeper;
 
-      /* allows the guardian to designate a new guardian contract for upgrade purposes */
-      function setGuardian (address newGuardian) {
-            if (msg.sender == guardian) {
-                  guardian = newGuardian;
+      /* allows the keeper to designate a new keeper contract for upgrade purposes */
+      function setKeeper (address newKeeper) {
+            if (msg.sender == keeper) {
+                  keeper = newKeeper;
             }
       }
 
@@ -55,7 +73,7 @@ contract eCoin {
 
       /* peg status update function */
       function setPegStatus (bool isPegHolding) {
-            if (msg.sender == guardian) {
+            if (msg.sender == keeper) {
                   pegStatus = isPegHolding;
             }
       }
@@ -65,7 +83,7 @@ contract eCoin {
 
       /* price feed update function */
       function setFeed (uint priceFeed) {
-            if (msg.sender == guardian) {
+            if (msg.sender == keeper) {
                   priceFeed = priceFeed;
             }
       }
@@ -76,7 +94,7 @@ contract eCoin {
 
       /* collateral requirement update function */
       function setCollReq (uint newCollReq) {
-            if (msg.sender == guardian) {
+            if (msg.sender == keeper) {
                   collReq = newCollReq;
             }
       }
@@ -146,10 +164,10 @@ contract eCoin {
             }
       }
 
-      /* enables the guardian to force positions to cover at the price feed for liquidity purposes */
+      /* enables the keeper to force positions to cover at the price feed for liquidity purposes */
       function forcedCover (address targetAccount) {
             IssueAccount a = issueList[issueNum[targetAccount]];
-            if (msg.sender == guardian) {
+            if (msg.sender == keeper) {
                   if (balance[msg.sender] >= a.debt) {
                         balance[msg.sender] -= a.debt;
                         fColl[msg.sender] += a.debt/priceFeed;
@@ -161,21 +179,21 @@ contract eCoin {
       }
 
       /* the collateral/debt ratio, given in percentage, below which an issue account becomes vulnerable to a soft margin call
-       (callable only by the guardian DAO, up to 5% penalty) */
+       (callable only by the keeper DAO, up to 5% penalty) */
       uint softCallRate;
 
       /* soft margin call ratio update function */
       function setSoftCallRate (uint newRate) {
-            if (msg.sender == guardian) {
+            if (msg.sender == keeper) {
                   softCallRate = newRate;
             }
       }
 
-      /* a soft margin call, done by the guardian DAO in periods of medium to high risk of a black swan event, and to protect issue accounts from hard margin calls */
+      /* a soft margin call, done by the keeper DAO in periods of medium to high risk of a black swan event, and to protect issue accounts from hard margin calls */
       function softCall (address calledAccount, uint penalty) {
             IssueAccount a = issueList[issueNum[calledAccount]];
             if (penalty <= 105){
-                  if (msg.sender == guardian) {
+                  if (msg.sender == keeper) {
                         if (a.lColl / priceFeed < a.debt * softCallRate/100) {
                               if (balance[msg.sender] >= a.debt) {      
                                     balance[msg.sender] -= a.debt;
@@ -195,7 +213,7 @@ contract eCoin {
 
       /* hard margin call ratio update function */
       function setHardCallRate (uint newRate) {
-            if (msg.sender == guardian) {
+            if (msg.sender == keeper) {
                   hardCallRate = newRate;
             }
       }
@@ -272,7 +290,7 @@ contract eCoin {
             collReq = 300;
             softCallRate = 200;
             hardCallRate = 150;
-            guardian = msg.sender;
+            keeper = msg.sender;
             numAccounts = 1;
       }
 }
