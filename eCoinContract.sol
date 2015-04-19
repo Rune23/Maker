@@ -164,37 +164,24 @@ contract eCoin {
             }
       }
 
-      /* enables the keeper to force positions to cover at the price feed for liquidity purposes */
-      function forcedCover (address targetAccount) {
-            IssueAccount a = issueList[issueNum[targetAccount]];
-            if (msg.sender == keeper) {
-                  if (balance[msg.sender] >= a.debt) {
-                        balance[msg.sender] -= a.debt;
-                        fColl[msg.sender] += a.debt/priceFeed;
-                        fColl[targetAccount] += a.lColl - a.debt/priceFeed;
-                        a.lColl = 0;
-                        a.debt = 0;
-                  }
-            }
-      }
-
       /* the collateral/debt ratio, given in percentage, below which an issue account becomes vulnerable to a soft margin call
-       (callable only by the keeper DAO, up to 5% penalty) */
-      uint softCallRate;
+       (callable only by the keeper, up to 1% penalty) */
+      uint forcedCoverRate;
 
       /* soft margin call ratio update function */
-      function setSoftCallRate (uint newRate) {
+      function setForcedCoverRate (uint newRate) {
             if (msg.sender == keeper) {
-                  softCallRate = newRate;
+                  forcedCoverRate = newRate;
             }
       }
 
-      /* a soft margin call, done by the keeper DAO in periods of medium to high risk of a black swan event, and to protect issue accounts from hard margin calls */
-      function softCall (address calledAccount, uint penalty) {
+      /* forced covers can be performed by the keeper in order to maintain liquidity, to protect against a black swan event, or to prevent an issue account from being
+      hard called */
+      function forcedCover (address calledAccount, uint penalty) {
             IssueAccount a = issueList[issueNum[calledAccount]];
             if (penalty <= 105){
                   if (msg.sender == keeper) {
-                        if (a.lColl / priceFeed < a.debt * softCallRate/100) {
+                        if (a.lColl / priceFeed < a.debt * forcedCoverRate/100) {
                               if (balance[msg.sender] >= a.debt) {      
                                     balance[msg.sender] -= a.debt;
                                     fColl[msg.sender] += penalty/100*a.debt/priceFeed;
@@ -287,9 +274,9 @@ contract eCoin {
       function eCoin() {
             pegStatus = true;
             priceFeed = 200000000000;
-            collReq = 300;
-            softCallRate = 200;
-            hardCallRate = 150;
+            collReq = 200;
+            forcedCoverRate = 270;
+            hardCallRate = 140;
             keeper = msg.sender;
             numAccounts = 1;
       }

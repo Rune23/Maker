@@ -70,7 +70,7 @@ contract eAsset {
             }
       }
 
-      /* address of the keeper DAO contract */
+      /* address of the keeper contract */
       address keeper;
 
       /* allows the keeper to designate a new keeper contract for upgrade purposes */
@@ -139,15 +139,15 @@ contract eAsset {
                               fColl[msg.sender] -= issueColl;
                               a.lColl += issueColl;
                               a.debt += issueColl/priceFeed*1000000/collReq*100;
-                              balance[msg.sender] += issueColl/priceFeed/collReq*100;
+                              balance[msg.sender] += issueColl/priceFeed*1000000/collReq*100;
                         } else {
                               issueNum[msg.sender] = numAccounts ++;
                               IssueAccount b = issueList[issueNum[msg.sender]];
                               fColl[msg.sender] -= issueColl;
                               b.account = msg.sender;
                               b.lColl += issueColl;
-                              b.debt += issueColl/priceFeed/collReq*100;
-                              balance[msg.sender] += issueColl/priceFeed/collReq*100;
+                              b.debt += issueColl/priceFeed*1000000/collReq*100;
+                              balance[msg.sender] += issueColl/priceFeed*1000000/collReq*100;
                         }
                   }
             }
@@ -178,7 +178,7 @@ contract eAsset {
       }
 
       /* the collateral/debt ratio, given in percentage, below which an issue account becomes vulnerable to a soft margin call
-       (callable only by the keeper DAO, up to 5% penalty) */
+       (callable only by the keeper, up to 1% penalty) */
       uint forcedCoverMax;
 
       /* soft margin call ratio update function */
@@ -192,7 +192,7 @@ contract eAsset {
       hard called */
       function forcedCover (address calledAccount, uint penalty) {
             IssueAccount a = issueList[issueNum[calledAccount]];
-            if (penalty <= 105){
+            if (penalty <= 101){
                   if (msg.sender == keeper) {
                         if (a.lColl / priceFeed < a.debt * forcedCoverMax/100) {
                               if (balance[msg.sender] >= a.debt) {      

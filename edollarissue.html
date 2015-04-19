@@ -10,18 +10,17 @@
 
 <body>
 <button onclick="refreshfilter()">refresh</button>
-<a href="/home/rune/Maker/edollarissue.html">issue dashboard</a>
+<a href="/home/rune/Maker/edollar.html">edollar</a>
 
 	<!--jumbotron-->
 	<div class="jumbotron">
 		<div class="container text-center">
-			<h1>Balance: <strong id="balanceID">N/A</strong> EUSD</h1>
 			<br/>
-			<div class="btn-group">
+			<div class="btn-group" id="topbtn">
 				<button onclick="sendFun()" class="btn btn-lg btn-warning" id="sendbtn">Send</button>
 				<button onclick="receiveFun()" class="btn btn-lg btn-info" id="receivebtn">Receive</button>
 				<button onclick="privacyFun()"class="btn btn-lg btn-info" id="privacybtn">Privacy</button>
-				<!--<button onclick="issueFun()"class="btn btn-lg btn-info" id="issuebtn">Issue</button>-->
+				<button onclick="issueFun()"class="btn btn-lg btn-info" id="issuebtn">Issue</button>
 			</div>
 		</div><!--end container-->
 	</div><!--end jumbotron-->
@@ -53,7 +52,6 @@
 		<div class="well">
 			<div class="container text-center">
 				<h3>Receive money</h3>
-				<p>Your Ethereum address: <code id="coinbaseAddrID">N/A</code></p>
 				<p>Your Bitcoin address: <code class="bitcoinaddr">N/A</code></p>
 				<button onclick="btcGen()" class="btn btn-danger" id="btcgen">New Bitcoin address</button>
 			</div><!--end container-->
@@ -83,7 +81,12 @@
 				<h3>Issue eDollar</h3>
 				<a href="http://makerdao.com/" class="btn btn-danger" id="issuewarningbtn">READ BEFORE USING</a>
 				<div class="fcollstats">
+					<h5>Your Ethereum address: <code id="coinbaseAddrID">N/A</code></h5>
+					<h5>Balance: <strong id="balanceID">N/A</strong> EUSD</h5>
+					<h5>Debt: <strong id="debt">N/A</strong> EUSD</h5>
 					<h5>Free collateral: <strong id="freeCollateral">N/A</strong> ETH</h5>
+			        <h5>Locked collateral: <strong id="lockedCollateral">N/A</strong> ETH</h5>
+			        <h5>Feed price: <strong id="currentFeedPrice">N/A</strong> USD per ETH</h5>
 	    		</div>
 	    		<div class="depositDiv">
 			    	<form action="" class="form-inline">   
@@ -104,9 +107,7 @@
 					</form>
 			    </div>
 			    <div class="issuestats">
-			    	<h5>Debt: <strong id="debt">N/A</strong> EUSD</h5>
-			        <h5>Locked collateral: <strong id="lockedCollateral">N/A</strong> ETH</h5>
-			        <h5>Feed price: <strong id="currentFeedPrice">N/A</strong> USD per ETH</h5>
+			    	
 	    		</div>
 				<div class="issueDiv">
 					<form action="" class="form-inline">
@@ -164,8 +165,8 @@
 
 	    function sendTX() {
 	    	var receiver = "0x" + $("#receiverID").val();
-	    	var amount = $("#amountID").val() * 1000000;
-	    	eCoinInstance.sendTransaction().coinTransfer(receiver,amount);
+	    	var amount = $("#amountID").val();
+	    	eCoinInstance.sendTransaction().sendCoin(receiver,amount);
 	    }
 
 	    function depositCollateral() {
@@ -195,7 +196,8 @@
 	    $('.usebox').hide();
 		$('#sendbtn').removeClass('btn-info')
 		$('#sendbtn').addClass('btn-warning')
-		$('#send').show();
+		$('#issue').show();
+		$('.jumbotron').hide();
 
 		function sendFun() {
 	    	$('.usebox').hide();
