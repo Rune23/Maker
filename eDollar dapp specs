@@ -1,0 +1,37 @@
+eDollar dapp specs
+
+The eDollar dapps has 3 kinds of agents:
+
+users, issuers and Maker
+
+and 4 types of contracts:
+
+coin, keeper, multiple dynasty contracts and multiple delegate contracts
+
+The users uses eDollar as a cryptocurrency, and interact with the coin contract. They're able to send and receive the coin through an easy to use frontend. They can expect the price of 1 eDollar to always be worth 1 USD because of the way issuers and Maker work.
+
+Issuers uses eDollar as a method of issuing eDollar to take on leveraged positions or make money from providing liquidity to the system, market making. They also interact directly with the primary coin contract. When issuing eDollar they must initally put up ether as collateral that is valued at at least 200% of the amount of eDollar they wish to issue, so if they want to issue 10 EUSD, they must put up 20 USD worth of ether as collateral. This price is determined by a decentralized price feed from Augur. To get the collateral back they have to cover the EUSD they issued, burning it and reducing total EUSD supply. If their position ever goes below 140% collateral to debt ratio they become vulnerable to a "hard margin call" by anyone, who can burn EUSD on their behalf and then receive the total amount of collateral they have locked on the blockchain (so a potential instant 40% profit).
+
+More than one type of collateral can be used in the contract, each type has its own "issuance max" that determines how many eDollars can be collateralized by that type of collateral in total. They can also have increased margin call and collateral rates if they are more volatile.
+
+Maker is the DAO that is responsible for maintaining the rules (security parameters) of the system, and has the ability to maintain liquidity and collateral levels through the use of forced covers. With the forced cover, Maker is able to force any position that is collateralized below 270% to buy EUSD with its locked collateral at market rate from Maker, and then close its position. Each of these abilities are delegated on to delegate contracts through voting by makercoin holders. Makercoin holder vote for a contract for each type of permission, and that contract can then use the permission through its own logic (which can be arbitrary - shareholder voting, democratic "insider club" voting, etc). 
+
+To further increase the flexibility of the delegate contracts, they themselves can be "dynasty contracts" that pass on their permissions to the actual delegate contract. When that delegate contract then wishes to upgrade its own parameters it can cause the dynasty contract to point to a new delegate contract with updated permissions.
+
+The vital permissions for changing the security parameters are meant to have blank contracts that cannot do anything most of the time, and only get active delegate contracts when the shareholders want to update or change a vital parameter. An example of vital parameters are hard margin call rate, price feed source contract, forced cover rate, debt ceiling for a given collateral type, setting the keeper contract, migrating the coin contract. Maintenance permissions are the forced cover and withdraw ether/edollar. These permissions should be given to contracts that can be actively controlled by humans or human-controlled bots that operate within some hardcoded boundaries within that contract. A voter will be allowed to use their shares to cast a vote for one contract for each permission, and the contract with the most votes will be the one that is given the permission in the contract.
+
+In most cases of the Maker voters or a Maker delegate taking any action, this action has to first be "primed" before it can be actually executed. Priming it means that users will be alerted to the changes before they can be enforced, and allows voters to take action or users and issuers to pull their money out of the system in case the changes are fraudulent. The only exception to this are the administrative permissions that cannot significantly damage the system, such as withdrawing edollar/ether from the keeper contract and performing forced covers.
+
+
+Maker
+===
+function Issue(string collateral_symbol, string issue_symbol, int amount);
+function GetCoinContactBySymbol(string symbol);
+
+Coin   (includes eAsset, ether wrapper, bitcoin wrapper, etc)
+===
+function Transfer(address to, uint amount);
+function DepositTo...
+function Balance(address to, uint amount);
+
+

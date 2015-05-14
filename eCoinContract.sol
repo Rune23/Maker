@@ -30,29 +30,29 @@ contract eCoin {
 
     /* issuing the pegged coin and covering positions */
 
-    /* free collateral (fColl) is a balance of ether that is
+    /* free ether collateral (fEthColl) is a balance of ether that is
        not locked up as collateral and can be freely deposited,
        withdrawn and sent to other accounts */
-    mapping (address => uint) fColl;
+    mapping (address => uint) fEthColl;
 
     /* deposit ether to the contract */
     function depositEther() {
-        fColl[msg.sender] += msg.value;
+        fEfCthColl[msg.sender] += msg.value;
     }
 
     /* withdraw ether from the contract */
     function withdrawEther(uint withdrawAmountInWei) {
-        if (fColl[msg.sender] >= withdrawAmountInWei) {
-            fColl[msg.sender] -= withdrawAmountInWei;
+        if (fEthColl[msg.sender] >= withdrawAmountInWei) {
+            fEthColl[msg.sender] -= withdrawAmountInWei;
             msg.sender.send(withdrawAmountInWei);
         }
     }
 
     /* send ether held in the contract as free collateral to other users */
     function sendFreeCollateral(address receiver, uint amount) {
-        if (fColl[msg.sender] >= amount) {
-            fColl[msg.sender] -= amount;
-            fColl[receiver] += amount;
+        if (fEthColl[msg.sender] >= amount) {
+            fEthColl[msg.sender] -= amount;
+            fEthColl[receiver] += amount;
         }
     }
 
@@ -104,10 +104,10 @@ contract eCoin {
     }
 
     /* an issue account is a struct that keeps track of the
-       debt and locked collateral (lColl) of an issuer */
+       debt and locked collateral (lEthColl) of an issuer */
     struct IssueAccount {
         address account;
-        uint lColl;
+        uint lEthColl;
         uint debt;
     }
 
@@ -122,29 +122,37 @@ contract eCoin {
     /* keeps track of the total amount of created accounts */
     uint numAccounts;
 
+    /* the total amount of debt that is backed by ether collateral */
+    uint ethDebt;
+
+    /* the maximum amount of ether backed debt that can be created */
+    uint ethDebtCeiling;
+
     /* checks to see if the peg is holding, and if it is then
        checks to see if the issuer already has an issue account
        by checking their issueNum. If they have an issueNum then
-       their IssueAccount has its debt and lColl values updated
+       their IssueAccount has its debt and lEthColl values updated
        accordingly. If no issue account exists a new one is created
        by incrementing numAccounts */
     function issue(uint issueColl) {
-        if (pegStatus && fColl[msg.sender] >= issueColl) {
-            var value = issueColl/priceFeed/collReq*100;
+        if (pegStatus && fEthColl[msg.sender] >= issueColl && ethDebt + issueColl < ethDebtCeiling) {
+            uint value = issueColl/priceFeed/collReq*100;
             if (issueNum[msg.sender] > 0) {
                 IssueAccount a = issueList[issueNum[msg.sender]];
-                fColl[msg.sender] -= issueColl;
-                a.lColl += issueColl;
+                fEthColl[msg.sender] -= issueColl;
+                a.lEthColl += issueColl;
                 a.debt += value;
                 balance[msg.sender] += value;
+                ethDebt += value;
             } else {
                 issueNum[msg.sender] = ++numAccounts;
                 IssueAccount a = issueList[issueNum[msg.sender]];
-                fColl[msg.sender] -= issueColl;
+                fEthColl[msg.sender] -= issueColl;
                 a.account = msg.sender;
-                a.lColl += issueColl;
+                a.lEthColl += issueColl;
                 a.debt += value;
                 balance[msg.sender] += value;
+                ethDebt += value;
             }
         }
     }
@@ -154,9 +162,10 @@ contract eCoin {
         IssueAccount a = issueList[issueNum[msg.sender]];
         if (balance[msg.sender] >= a.debt) {
             balance[msg.sender] -= a.debt;
-            fColl[msg.sender] += a.lColl;
-            a.lColl = 0;
+            fEthColl[msg.sender] += a.lEthColl;
+            a.lEthColl = 0;
             a.debt = 0;
+            ethDebt -= a.debt;
         }
     }
 
@@ -166,16 +175,17 @@ contract eCoin {
         IssueAccount a = issueList[issueNum[msg.sender]];
         if (balance[msg.sender] >= coverAmount
                 && a.debt >= coverAmount) {
-            fColl[msg.sender] += a.lColl * coverAmount / a.debt;
-            a.lColl -= a.lColl * coverAmount / a.debt;
+            fEthColl[msg.sender] += a.lEthColl * coverAmount / a.debt;
+            a.lEthColl -= a.lEthColl * coverAmount / a.debt;
             a.debt -= coverAmount;
             balance[msg.sender] -= coverAmount;
+            ethDebt -= coverAmount;
         }
     }
 
     /* the collateral/debt ratio, given in percentage, below which
        an issue account becomes vulnerable to a soft margin call
-       (callable only by the keeper, up to 1% penalty) */
+       (callable only by the keeper, up to 5% penalty) */
     uint forcedCoverRate;
 
     /* soft margin call ratio update function */
@@ -192,20 +202,20 @@ contract eCoin {
         IssueAccount a = issueList[issueNum[calledAccount]];
         if (penalty <= 105
                 && msg.sender == keeper
-                && a.lColl / priceFeed < a.debt * forcedCoverRate/100
+                && a.lEthColl / priceFeed < a.debt * forcedCoverRate/100
                 && balance[msg.sender] >= a.debt) {
-            var value = penalty/100*a.debt/priceFeed;
+            uint value = penalty/100*a.debt/priceFeed;
             balance[msg.sender] -= a.debt;
-            fColl[msg.sender] += value;
-            fColl[calledAccount] += a.lColl - value;
-            a.lColl = 0;
+            fEthColl[msg.sender] += value;
+            fEthColl[calledAccount] += a.lEthColl - value;
+            ethDebt -= value;
+            a.lEthColl = 0;
             a.debt = 0;
         }
     }
 
     /* the collateral/debt ratio, given in percentage, below which
-       an issue account becomes vulnerable to a hard margin call
-       (callable by anyone, 10% penalty) */
+       an issue account becomes vulnerable to a hard margin call */
     uint hardCallRate;
 
     /* hard margin call ratio update function */
@@ -219,13 +229,12 @@ contract eCoin {
        debt of an issue account position with a low collateral ratio */
     function hardCall(address calledAccount) {
         IssueAccount a = issueList[issueNum[calledAccount]];
-        if (a.lColl / priceFeed < a.debt * hardCallRate/100
+        if (a.lEthColl / priceFeed < a.debt * hardCallRate/100
                 && balance[msg.sender] >= a.debt) {
-            var value = 110/100*a.debt/priceFeed;
             balance[msg.sender] -= a.debt;
-            fColl[msg.sender] += value;
-            fColl[calledAccount] += a.lColl - value;
-            a.lColl = 0;
+            fEthColl[msg.sender] += a.lEthColl;
+            ethDebt -= a.debt;
+            a.lEthColl = 0;
             a.debt = 0;
         }
     }
@@ -237,12 +246,12 @@ contract eCoin {
     }
 
     function checkFreeCollateral(address owner) returns (uint amount) {
-        return fColl[owner];
+        return fEthColl[owner];
     }
 
     function lockedCollateralByAddress(address owner) returns (uint lockedCollateral) {
         IssueAccount a = issueList[issueNum[owner]];
-        return a.lColl;
+        return a.lEthColl;
     }
 
     function debtByAddress(address owner) returns (uint debt) {
@@ -265,7 +274,7 @@ contract eCoin {
 
     function lockedCollateralByIssueNum(uint num) returns (uint lockedCollateral) {
         IssueAccount a = issueList[num];
-        return a.lColl;
+        return a.lEthColl;
     }
 
     function debtByIssueNum(uint num) returns (uint debt) {
