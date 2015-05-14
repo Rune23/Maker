@@ -1,0 +1,58 @@
+.no-float
+{
+float:none !important;
+    
+}
+
+.custom-width
+{
+    width: 1087.5px !important;
+    margin: auto !important;
+    
+}
+
+.noBackground { 
+    background-color:transparent; 
+}
+
+
+.add20pxLeft{
+    
+    margin-left:20px;
+}
+
+.LeftMargin-LeftUL{
+    margin-left: 76px;
+    
+}
+
+.add150pxLeft{
+    
+    margin-left:150px;
+}
+
+.add120xLeft(
+    position:relative;
+    left:120px;
+
+)
+
+.btn-xlarge {
+    padding: 18px 28px;
+    font-size: 22px;
+    line-height: normal;
+    -webkit-border-radius: 8px;
+       -moz-border-radius: 8px;
+            border-radius: 8px;
+    }
+
+
+.imageClass{
+    position: absolute;   
+    /*left: 600px;*/
+    /*top:10px;*/
+    
+    left:45%;
+    top:15%;
+}
+

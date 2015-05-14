@@ -1,0 +1,57 @@
+nav{
+  background-color: #000000;
+}
+
+
+/*text lnk in headers*/
+.navbar .navbar-nav p {
+color: #fffffb;
+    
+}
+/*header icons*/
+.navbar .navbar-nav [class^="pe"] {
+    
+    color:#ff5500 ;
+}
+
+
+/*for the main background areas*/
+.customBackgroundClass{
+    
+    background-color: #ffaa01;
+}
+
+
+.btnColor{
+    
+    background-color:#ffaa01;
+    width: 300px;
+    height: 40px;
+}
+
+.BtnExtra{
+    background-color:#ffaa01;
+    width: 300px;
+    height: 100px;
+    font-size: 35px;
+}
+
+
+
+nakedFonts{
+    
+}
+
+
+.boldedNakedFont{
+}
+.headingNakedFonts{
+}
+.headings{
+    background-color:#ff5500
+}
+.majorAreas{
+}
+
+.highlights {
+}

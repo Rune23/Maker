@@ -1,0 +1,3 @@
+border: 1px solid darken($base-color, 20%);
+text-shadow: 0 -1px 0 darken($base-color, 10%);
+@include box-shadow(inset 0 1px 0 lighten($base-color, 20%));

@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html>
+  
+  <head>
+    <title>
+      Edollar Dashboard
+  </title>
+
+  <link href="css/application.min.css" rel="stylesheet">
+  <link href="css/edollarMods.css" rel="stylesheet">
+    <link href="css/customTheme-blue.css" rel="stylesheet">
+  
+     
+      
+       
+  <!-- as of IE9 cannot parse css files with more that 4K classes separating in two files -->
+  <!--[if IE 9]>
+<link href="css/application-ie9-part2.css" rel="stylesheet">
+<![endif]-->
+  <link rel="shortcut icon" href="img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <script>
+    /* yeah we need this empty stylesheet here. It's cool chrome & chromium fix
+chrome fix https://code.google.com/p/chromium/issues/detail?id=167083
+https://code.google.com/p/chromium/issues/detail?id=332189
+*/
+  </script>
+  </head>
+  
+  <body>
+      <div class="container custom-width">
+      
+    <!--
+Main sidebar seen on the left. may be static or collapsing depending on selected state.
+
+* Collapsing - navigation automatically collapse when mouse leaves it and expand when enters.
+* Static - stays always open.
+-->
+  
+  <nav class="navbar bg-gray-dark navColor navbar-fixed-top center-block" role="navigation">
+      <img src="edollarLOGO2.png" class="img-circle imageClass" alt="edollar">
+    <div class="container no-float col-md-10">
+        
+      <!--  <div class="navbar-header">
+        
+        <a class="navbar-brand navbar-brand-logo" href="http://www.edollar.com">
+          <div class="brand">
+              <h3>Edollar</h3>   
+          </div>
+        </a>
+      </div>-->
+        
+        <ul class="nav navbar-nav navbar-left LeftMargin-LeftUL">
+            <li>
+            <a href="javascript:void(0)">
+              <i class="pe-7s-wallet">
+              </i>
+              <p class="text-info">
+                Wallet
+              </p>
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <i class="pe-7s-look">
+              </i>
+              <p class="text-info">
+                Privacy
+              </p>
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <i class="pe-7s-cash">
+              </i>
+              <p class="text-info">
+                Issue
+              </p>
+            </a>
+          </li>
+            
+            
+        </ul>
+        
+      
+        
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav navbar-right">
+          <li>
+            <a href="javascript:void(0)" data-toggle="search">
+              <i class="pe-7s-shuffle class=" text-info "">
+              </i>
+              <p class="text-info">
+                Trading
+              </p>
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <i class="pe-7s-joy">
+              </i>
+              <p class="text-info">
+                Games
+              </p>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <i class="pe-7s-graph2">
+              </i>
+              <p class="text-info">
+                Prediction
+              </p>
+            </a>
+          </li>
+          
+          <li>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <i class="pe-7s-cart">
+              </i>
+              <p class="text-info">
+                Shopping
+              </p>
+            </a>
+          </li>
+          
+          <li>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <i class="pe-7s-credit">
+              </i>
+              <p class="text-info">
+                Debit Cards
+              </p>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
+  </nav>
+  <!--  end navbar -->
+  
+  
+  
+  <!-- This is the white navigation bar seen on the top. A bit enhanced BS navbar. See .page-controls in _base.scss. -->
+  
+  
+  
+  
+  
+  
+  
+  
+    <!-- main page content. the place to put widgets in. usually consists of .row >
+.col-md-* >
+.widget.  -->
+    <main id="content" class="content center-block custom-width" role="main">
+      
+      <div class="row custom-width">
+        
+   
+        <!-- summary space -->
+        
+        
+        
+               <div class="col-md-8 maxHeightBalBox">
+                <section class="widget">
+                    <div class="widget-controls">
+                            <a href="#"><i class="fa fa-refresh"></i></a>
+                        </div>
+                    <h4 class="label headings">Your Addresses</h4><br><br>
+                    
+                            
+                    <span call="pagination-centered"><code class="col-md-offset-1"><h5 class="add150pxLeft addrSizes">0x7b2274657374223a2274657374227d</h5></code>       <!--  <span class="pull-right">(5000EUSD / 52000 ETH)</span> --></span>
+                                
+                        
+                        
+                        <br>
+                        
+                    
+                    <span class="add150pxLeft buttonSpan"><button class="btn btn-md btn-success genbtc btnColor ">Generate Bitcoin Address</button> </span>
+                    <br>
+                    <br>
+                    <br>
+            
+                        
+                    
+                        <!--
+                    <div class="widget-body">
+                        <div class="chart-stats">
+                            
+                            <br>   
+                            <h4 class="label label-danger">Generate New Bitcoin Addresses</h4><br><br>
+                    
+                            
+                       <p>Your Bitcoin address: <code class="bitcoinPlaceholder">N/A</code>         <button class="btn btn-xs btn-success genbtc col-md-offset-1">Generate Bitcoin Address</button></p>
+                                <br>
+                                <p>Your Bitcoin address: <code class="bitcoinPlaceholder">N/A</code> <button class="btn btn-xs btn-success genbtc col-md-offset-1">Generate Bitcoin Address</button></p>
+                                <br>
+                                <p>Your Bitcoin address: <code class="bitcoinPlaceholder">N/A</code><button class="btn btn-xs btn-success genbtc col-md-offset-1">Generate Bitcoin Address</button></p>
+                                
+                        </div>
+                        
+                    </div>-->
+                </section>
+            </div>
+          
+          
+          
+          <div class="clearfix visible-xs"></div>
+        
+        <!-- Balance section-->
+         <div class="col-md-4">
+                <section class="widget bg-success text-white customBackgroundClass">
+                    <div class="widget-body clearfix">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <span class="widget-icon">
+                                    <i class="glyphicon glyphicon-usd"></i>
+                                </span>
+                            </div>
+                            <div class="col-xs-9">
+                                <h4 class="no-margin col-md-offset-1 add20pxLeft">Balance</h4><br>
+                                <p class="h2 no-margin fw-normal">7,448 EUSD</p>
+                            </div>
+                        </div><br>
+                        <div class="row">
+                            <div class="col-xs-6 center-block add44pxLeft" style="
+    left: 120px">
+                                <!--<h5 class="no-margin ">Ether</h5>-->
+                                <p class="value4">86000 ETH</p>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </section>
+          </div>
+          
+          
+          
+        <!--
+          <div class="col-md-4">
+                <section class="widget bg-gray text-white">
+                    <div class="widget-body clearfix">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <span class="widget-icon">
+                                    <i class="glyphicon glyphicon-globe"></i>
+                                </span>
+                            </div>
+                           <div class="col-xs-9">
+                                        <h5 class="no-margin">Transaction Summary</h5>
+                                        <p class="h2 no-margin fw-normal">82,765 EUSD Total</p>
+                                    </div>
+                        </div>
+                        <div class="row">
+                                    <div class="col-xs-6">
+                                        <h5 class="no-margin">Last Week</h5>
+                                        <p class="value4">6756 EUSD </p>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <h5 class="no-margin">This Week</h5>
+                                        <p class="value4">3745 EUSD </p>
+                                    </div>
+                                </div>
+                    </div>
+                </section>
+            </div>
+          
+      </div>
+        
+        -->
+        
+                 
+     
+        
+      
+      <!-- end of row-->
+      
+      
+      
+      
+        
+        <!-- second set of rows-->
+      <div class="row custom-width">
+          
+          
+          
+          
+          
+          
+            <div class="col-md-12">
+                <section class="widget">
+                    <header>
+                        <div class="widget-controls">
+                            <a href="#"><i class="fa fa-refresh"></i></a>
+                        </div>
+                    </header>
+                    
+                    
+                    <div class="widget-body">
+                        <form class="form-horizontal" role="form">
+                            <fieldset>
+                                <h4 class="label headings">Send Money</h4><br><br>
+                                
+                                
+                                
+                                
+<div class="row">                            
+                        
+
+ <div class="col-md-8">                               
+                                 <div class="form-group">
+                                     
+                                     
+                                    <label class="col-sm-4 control-label" for="tooltip-enabled">To</label>
+                                    <div>
+                                         <div class="input-group">
+                                        <input type="text" class="form-control"
+                                            
+                                               placeholder="Enter Destination Address (Bitcoin, Ethereum, or Ethereum registered name" style="
+    width: 392px;">
+                                              
+                                        </div>
+                                    
+                                    </div>
+                                </div>
+
+                                
+                                
+                                <div class="form-group">
+                                           <label for="hint-field" class="col-sm-4 control-label">
+                                        Amount
+                                        <span class="help-block">EUSD, ETH or BTC</span>
+                                    </label>
+
+                                            <div class="input-group" style="
+    width: 392px;">
+                                                <input type="text" class="form-control" id="type-dropdown-appended">
+                                                
+                                                
+                                                <div class="input-group-btn">
+                                                    <select id="phone-type" class="selectpicker"
+                                                            data-style="headings"
+                                                            data-width="auto">
+                                                        <option>EUSD</option>
+                                                        <option>ETH</option>
+                                                        <option>BTC</option>
+                                                    </select>
+                                                </div>  
+                                            </div>
+                                            
+                                        </div>
+     
+     
+     
+     
+                                        
+     
+     
+     
+     
+                                
+ </div>                        
+    
+    
+    
+    
+    
+    
+     <div class="col-md-4">
+                                <div class="row">
+                                    <div class="col-sm-offset-4 col-sm-7">
+                                        
+                                        <button type="submit" class="btn btn-lg btn-success pull-right BtnExtra">Send</button>
+                            
+                                    </div>
+                                </div>
+                            </div>
+                                
+                            </fieldset>
+                           
+                                
+                                
+                                
+</div>    
+                                
+                                
+                                
+                        </form>
+                    </div>
+                </section>
+            </div>
+          
+          
+          
+          
+          
+          
+          
+          
+        </div>
+      <!---end of second row-->
+      
+      
+      
+      
+      <!--second set of bottom row for tables if needed-->
+      <!--second set of bottom row for tables if needed-->
+      <!--second set of bottom row for tables if needed-->
+      <!--second set of bottom row for tables if needed-->
+      
+      
+      <div class="row" style="
+    position: absolute;
+    left: 240px;">
+        <section class="widget">
+          <header>
+              <!--
+                  <div class="widget-controls">
+                    <div class="width-200">
+                        <div class="input-group input-group-sm input-group-transparent input-group-rounded">
+                            <span class="input-group-addon">
+                                <i class="fa fa-search"></i>
+                            </span>
+                            <input class="form-control " id="search-countries" type="text" placeholder="Search Transactions">
+                        </div>
+                    </div>
+                </div>
+                -->
+              
+              
+            <h4 class="label headings">
+              Transaction History
+        
+            </h4>
+            <div class="widget-controls">
+              <a href="#">
+                <i class="fa fa-refresh">
+                </i>
+              </a>
+            </div>
+          </header>
+          <div class="widget-body">
+            <p>
+              Successfull and pending transactions
+              
+            </p>
+            <div class="mt">
+              <table id="datatable-table" class="table table-striped table-hover table-bordered">
+                <thead>
+                  <tr>
+                    <th>
+                      Tran Id
+                    </th>
+                    <th>
+                      Amount
+                    </th>
+                       <th class="hidden-xs">
+                      Sender
+                    </th>
+                    <th class="no-sort hidden-xs">
+                      Reciever
+                    </th>
+                    <th class="hidden-xs">
+                      Description
+                    </th>
+                    <th class="hidden-xs">
+                      Status
+                    </th>
+                    <th class="hidden-xs">
+                      Timestamps
+                    </th>
+                    
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      1
+                    </td>
+                    <td>
+                      <span class="fw-semi-bold">
+                        30 eth
+                      </span>
+                    </td>
+                    <td class="hidden-xs">
+                      
+                      <span>
+                        62cdd0db4cd33991d486a69bee69e1998bb56d7a
+                      </span>
+                      
+                      
+                      
+                    </td>
+                    <td class="hidden-xs">
+                      <a href="#">
+                        Payment due
+                      </a>
+                    </td>
+                    <td class="hidden-xs">
+                      May 27, 2013
+                    </td>
+                    <td class="width-150">
+                      <div class="progress progress-sm mt-xs">
+                        <div class="progress-bar progress-bar-gray-light" style="width: 29%;">
+                        </div>
+                      </div>
+                    </td>
+                      <td class="hidden-xs">
+                            2015-05-13 20:18:02
+                        </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      2
+                    </td>
+                    <td>
+                      <span class="fw-semi-bold">
+                        20 eth
+                      </span>
+                    </td>
+                    <td class="hidden-xs">
+                      
+                      <span>
+                        62cdd0db4cd33991d486a69bee69e1998bb56d7a
+                      </span>
+                      
+                      
+                      
+                    </td>
+                    <td class="hidden-xs">
+                      <a href="#">
+                        Payment due
+                      </a>
+                    </td>
+                    <td class="hidden-xs">
+                      April 27, 2013
+                    </td>
+                    <td class="width-150">
+                      <div class="progress progress-sm mt-xs">
+                        <div class="progress-bar progress-bar-success" style="width: 100%;">
+                        </div>
+                      </div>
+                    </td>
+                      <td class="hidden-xs">
+                            2015-05-13 20:18:02
+                        </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      3
+                    </td>
+                    <td>
+                      <span class="fw-semi-bold">
+                        30 eth
+                      </span>
+                    </td>
+                    <td class="hidden-xs">
+                      
+                      <span>
+                        62cdd0db4cd33991d486a69bee69e1998bb56d7a
+                      </span>
+                      
+                      
+                      
+                    </td>
+                    <td class="hidden-xs">
+                      <a href="#">
+                        Payment due
+                      </a>
+                    </td>
+                    <td class="hidden-xs">
+                      March 27, 2013
+                    </td>
+                    <td class="width-150">
+                      <div class="progress progress-sm mt-xs">
+                        <div class="progress-bar progress-bar-success" style="width: 100%;">
+                        </div>
+                      </div>
+                    </td>
+                      <td class="hidden-xs">
+                            2015-05-13 20:18:02
+                        </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      4
+                    </td>
+                    <td>
+                      <span class="fw-semi-bold">
+                        40 eth
+                      </span>
+                    </td>
+                    <td class="hidden-xs">
+                      
+                      <span>
+                        62cdd0db4cd33991d486a69bee69e1998bb56d7a
+                      </span>
+                      
+                      
+                      
+                    </td>
+                    <td class="hidden-xs">
+                      <a href="#">
+                        Payment due
+                      </a>
+                    </td>
+                    <td class="hidden-xs">
+                      February 27, 2013
+                    </td>
+                    <td class="width-150">
+                      <div class="progress progress-sm mt-xs">
+                        <div class="progress-bar progress-bar-success" style="width: 100%;">
+                        </div>
+                      </div>
+                    </td>
+                       <td class="hidden-xs">
+                            2015-05-13 20:18:02
+                        </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      5
+                    </td>
+                    <td>
+                      <span class="fw-semi-bold">
+                        60 eth
+                      </span>
+                    </td>
+                    <td class="hidden-xs">
+                      
+                      <span>
+                        62cdd0db4cd33991d486a69bee69e1998bb56d7a
+                      </span>
+                      
+                      
+                      
+                    </td>
+                    <td class="hidden-xs">
+                      <a href="#">
+                        Payment due
+                      </a>
+                    </td>
+                    <td class="hidden-xs">
+                      January 27, 2013
+                    </td>
+                    <td class="width-150">
+                      <div class="progress progress-sm mt-xs">
+                        <div class="progress-bar progress-bar-success" style="width: 100%;">
+                        </div>
+                      </div>
+                    </td>
+                       <td class="hidden-xs">
+                            2015-05-14 20:18:02
+                        </td>
+                      
+                  </tr>
+                  
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </div>
+      
+      <!--bottom row for table-->
+      <div class="row">
+        
+        
+        
+      </div>
+    </main>
+ 
+  <!--end  of content wrap-->
+  
+  
+  <!-- The Loader. Is shown when pjax happens -->
+  <div class="loader-wrap hiding hide">
+    <i class="fa fa-circle-o-notch fa-spin-fast">
+    </i>
+  </div>
+          
+          
+          
+          
+  
+  <!-- common libraries. required for every page-->
+  <script src="vendor/jquery/dist/jquery.min.js">
+  </script>
+  <script src="vendor/jquery-pjax/jquery.pjax.js">
+  </script>
+  <script src="vendor/bootstrap-sass/assets/javascripts/bootstrap/transition.js">
+  </script>
+  <script src="vendor/bootstrap-sass/assets/javascripts/bootstrap/collapse.js">
+  </script>
+  <script src="vendor/bootstrap-sass/assets/javascripts/bootstrap/dropdown.js">
+  </script>
+  <script src="vendor/bootstrap-sass/assets/javascripts/bootstrap/button.js">
+  </script>
+  <script src="vendor/bootstrap-sass/assets/javascripts/bootstrap/tooltip.js">
+  </script>
+  <script src="vendor/bootstrap-sass/assets/javascripts/bootstrap/alert.js">
+  </script>
+  <script src="vendor/slimScroll/jquery.slimscroll.min.js">
+  </script>
+  <script src="vendor/widgster/widgster.js">
+  </script>
+  <script src="vendor/pace.js/pace.min.js">
+  </script>
+  <script src="vendor/jquery-touchswipe/jquery.touchSwipe.js">
+  </script>
+  <script src="vendor/jquery-touchswipe/jquery.touchSwipe.js">
+  </script>
+  
+  <!--added by Ola, not included with theme-->
+  <script src="vendor/bootstrap/dist/js/bootstrap.min.js">
+  </script>
+ <script src="vendor/bootstrap/dist/css/bootstrap.min.css">
+      
+  </script>
+        
+<script src="vendor/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
+<script src="vendor/select2/select2.min.js"></script>
+        
+        
+<link href="vendor/x_navbar_ct/css/pe-icon-7-stroke.css" rel="stylesheet" />
+  <link href="vendor/x_navbar_ct/css/ct-navbar.css" rel="stylesheet" />
+
+          
+  <script src="vendor/x_navbar_ct/js/ct-navbar.js">
+  </script>
+ 
+  
+  
+  <!-- page specific libs -->
+  <script src="vendor/underscore/underscore-min.js">
+  </script>
+  <script src="vendor/backbone/backbone.js">
+  </script>
+  <script src="vendor/backbone.paginator/lib/backbone.paginator.min.js">
+  </script>
+  <script src="vendor/backgrid/lib/backgrid.js">
+  </script>
+  <script src="vendor/backgrid-paginator/backgrid-paginator.js">
+  </script>
+  <script src="vendor/datatables/media/js/jquery.dataTables.js">
+  </script>
+  <script src="vendor/bootstrap-select/dist/js/bootstrap-select.min.js">
+  </script>
+  
+  
+  <!-- common app js -->
+  <script src="js/settings.js">
+  </script>
+  <script src="js/app.js">
+  </script>
+  
+  <!-- page specific libs -->
+  <script id="test" src="vendor/underscore/underscore.js">
+  </script>
+  <script src="vendor/jquery.sparkline/index.js">
+  </script>
+  <script src="vendor/jquery.sparkline/index.js">
+  </script>
+  <script src="vendor/d3/d3.min.js">
+  </script>
+      <!--
+  <script src="vendor/rickshaw/rickshaw.min.js">
+  </script>
+        -->
+      
+  <script src="vendor/raphael/raphael-min.js">
+  </script>
+  <script src="vendor/jQuery-Mapael/js/jquery.mapael.js">
+  </script>
+  <script src="vendor/jQuery-Mapael/js/maps/usa_states.js">
+  </script>
+  <script src="vendor/jQuery-Mapael/js/maps/world_countries.js">
+  </script>
+  <script src="vendor/bootstrap-sass/assets/javascripts/bootstrap/popover.js">
+  </script>
+  <script src="vendor/bootstrap_calendar/bootstrap_calendar/js/bootstrap_calendar.min.js">
+  </script>
+  <script src="vendor/jquery-animateNumber/jquery.animateNumber.min.js">
+  </script>
+  
+  <!-- page specific js -->
+      <!--
+
+uncomment to enable for rickshaw
+  <script src="js/index.js">
+  </script>
+          -->
+          
+      <script>    
+          $( document ).ready(function() {
+          $('.genbtc').click(function() {
+	  		var Request = new XMLHttpRequest();
+			Request.open('POST', 'https://cors.shapeshift.io/shift');
+			Request.setRequestHeader('Content-Type', 'application/json');
+			Request.onreadystatechange = function () {
+				if (this.readyState === 4) {
+					var jsonobj = JSON.parse(this.responseText);
+                    var BitcoinAddr = jsonobj["deposit"];
+					//$(".bitcoinPlaceholder").text(jsonobj["deposit"]);
+                    $(".buttonSpan").replaceWith("<span><code class='addrSizes noBackground add150pxLeft'>1PqDMb1fSW3EVchqPtdgRRS4J5zR8guvM4</code></span>");   
+                    
+                    
+				}
+			};
+			var body = {
+				'withdrawal' : 'LMDXAZAbcCgz2ebmkh3PpsGZaBckVweVuS',
+				'pair' : 'btc_ltc',
+				'returnAddress' : '1PqDMb1fSW3EVchqPtdgRRS4J5zR8guvM4',
+			}
+			Request.send(JSON.stringify(body));	
+			//$(".bitcoinPlaceholder").text("...");
+		});
+	});
+    </script>
+        
+          
+          </div>
+  </body>
+  
+</html>
